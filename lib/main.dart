@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(Quizzler());
@@ -24,36 +25,53 @@ class QuizPage extends StatefulWidget {
   _QuizPageState createState() => _QuizPageState();
 }
 
-List<Icon> scoreKeeper = [
-  Icon(
-    Icons.check,
-    color: Colors.green,
-  ),
-  Icon(
-    Icons.close,
-    color: Colors.red,
-  ),
-  Icon(
-    Icons.close,
-    color: Colors.red,
-  ),
-  Icon(
-    Icons.close,
-    color: Colors.red,
-  ),
-  Icon(
-    Icons.check,
-    color: Colors.green,
-  ),
-  Icon(
-    Icons.close,
-    color: Colors.red,
-  ),
-  Icon(
-    Icons.close,
-    color: Colors.red,
-  ),
+List<Icon> scoreKeeper = [];
+List<String> questions = [
+  'You can lead a cow down stairs but not up stairs.',
+  'Approximately one quarter of human bones are in the feet.',
+  'A slug\'s blood is green.',
+  'Is this app developed using'
 ];
+List<bool> answers = [false, true, true, true];
+int questionIndex = 0;
+bool correctAnswer = answers[questionIndex];
+
+void checkAnswer(bool userAnswer) {
+  //checking to see if it's the first question then clear the score board
+
+  //if (questionIndex == 0)
+
+  //checking to see if there is available question
+  if (questionIndex < questions.length - 1) {
+    if (questionIndex == 0) scoreKeeper.clear();
+    if (userAnswer == answers[questionIndex])
+      giveScore(true);
+    else
+      giveScore(false);
+
+    questionIndex++;
+  } else if (questionIndex == questions.length - 1) {
+    giveScore(userAnswer);
+    questionIndex = 0;
+  }
+}
+
+void giveScore(bool answeredStatus) {
+  if (answeredStatus)
+    scoreKeeper.add(
+      Icon(
+        Icons.check,
+        color: Colors.green,
+      ),
+    );
+  else
+    scoreKeeper.add(
+      Icon(
+        Icons.close,
+        color: Colors.red,
+      ),
+    );
+}
 
 class _QuizPageState extends State<QuizPage> {
   @override
@@ -68,7 +86,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                questions[questionIndex],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -93,17 +111,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  scoreKeeper.add(
-                    Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ),
-                  );
-                });
-              },
-              onLongPress: () {
-                setState(() {
-                  scoreKeeper.clear();
+                  checkAnswer(true);
                 });
               },
             ),
@@ -123,6 +131,9 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
+                setState(() {
+                  checkAnswer(false);
+                });
               },
             ),
           ),
