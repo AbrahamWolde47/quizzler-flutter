@@ -2,6 +2,7 @@ import 'question.dart';
 import 'package:flutter/material.dart';
 
 class QuizController {
+  int questionNumber;
   List<Icon> scoreKeeper = [];
   List<Question> _questionBank = [
     Question('Some cats are actually allergic to humans', true),
@@ -32,7 +33,12 @@ class QuizController {
   ];
 
   String getQuestion(int questionIndex) {
-    return _questionBank[questionIndex].questionText;
+    if (questionIndex < _questionBank.length - 1) {
+      return _questionBank[questionIndex].questionText;
+    } else {
+      questionIndex = 0;
+      return 'You\'ve completed the game! \n Long press on TRUE to play again.';
+    }
   }
 
   bool getAnswer(int answerIndex) {
@@ -60,23 +66,27 @@ class QuizController {
     //checking to see if it's the first question then clear the score board
 
     //if (questionIndex == 0)
-
+    questionNumber = questionIndex;
     //checking to see if there is available question
-    if (questionIndex < _questionBank.length - 1) {
-      if (questionIndex == 0) scoreKeeper.clear();
-      if (userAnswer == _questionBank[questionIndex].questionAnswer)
+    if (questionNumber < _questionBank.length - 1) {
+      if (questionNumber == 0) scoreKeeper.clear();
+      if (userAnswer == _questionBank[questionNumber].questionAnswer)
         giveScore(true);
       else
         giveScore(false);
 
-      questionIndex++;
-    } else if (questionIndex == _questionBank.length - 1) {
+      questionNumber++;
+    } else if (questionNumber == _questionBank.length - 1) {
       giveScore(userAnswer);
-      questionIndex = 0;
+      questionNumber = 0;
     }
   }
 
   List getScore() {
     return scoreKeeper;
+  }
+
+  void adjustQuestionIndex(int newNumber) {
+    questionNumber = newNumber;
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'quiz_controller.dart';
 
@@ -71,6 +70,12 @@ class _QuizPageState extends State<QuizPage> {
                 setState(() {
                   quizController.checkAnswer(true, questionIndex);
                   questionIndex++;
+                });
+              },
+              onLongPress: () {
+                setState(() {
+                  questionIndex = 0;
+                  quizController.checkAnswer(true, questionIndex);
                 });
               },
             ),
